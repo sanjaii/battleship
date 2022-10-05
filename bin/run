@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/battleship'
+require_relative '../lib/input_deserializer'
+require_relative '../lib/input_reader'
+require_relative '../lib/output_serializer'
+require_relative '../lib/output_writer'
+
+class PlayBattleship
+  private
+
+  attr_reader :input_source, :output_source
+
+  def initialize(input_source, output_source)
+    @input_source = input_source
+    @output_source = output_source
+  end
+
+  def array_of_inputs
+    InputReader.new(input_source).read
+  end
+
+  def deserialized_inputs
+    InputDeserializer.new(array_of_inputs)
+  end
+
+  def battleship
+    Battleship.new(deserialized_inputs)
+  end
+
+  def serialized_output
+    OutputSerializer.new(battleship, deserialized_inputs).generate_output
+  end
+
+  public
+
+  def play
+    OutputWriter.new(output_source).write(serialized_output)
+  end
+end
+
+if $PROGRAM_NAME == __FILE__
+  INPUT_SOURCE = 'input.txt'
+  OUTPUT_SOURCE = 'output.txt'
+  PlayBattleship.new(INPUT_SOURCE, OUTPUT_SOURCE).play
+end
