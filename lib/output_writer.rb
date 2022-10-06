@@ -1,16 +1,16 @@
 class OutputWriter
   private
 
-  attr_reader :path
+  attr_reader :source
 
   def initialize(source)
-    @path = source
+    @source = source
   end
 
   public
 
   def write(output)
-    File.open('output.txt', 'w+') do |file|
+    File.open(source, 'w+') do |file|
       file.write output
     end
   end
